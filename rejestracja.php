@@ -20,7 +20,7 @@
     </nav>
     <form method="post">
         <div class="form-group">
-            <input type="text" class="form-control" id="login" name="login" placeholder="Wpisz login" autocomplete="off"> <br><br>
+            <input type="text" class="form-control" id="login" name="login" placeholder="Wpisz login"   autocomplete="off" > <br><br>
         </div>
         <div class="form-group">
             <input type="password" class="form-control" id="password" name="password" placeholder="Wpisz hasło"> <br><br>
@@ -31,7 +31,8 @@
         <button type="submit" id="przycisk" name="Przycisk">Zarejestruj</button>
 </form>
     <?php
-    //error_reporting(0);
+    error_reporting(1);
+    session_start();
     $pol = new mysqli("localhost", "root", "", "baza");
     if (mysqli_connect_error()) {
       die("Nie Połączono" . mysqli_connect_error())."<br>";
@@ -43,62 +44,39 @@
         haslo2 VARCHAR(20)  NOT NULL,
         PRIMARY KEY (ID)
       )");
-      $sqlsprawdzanie = "SELECT login, haslo FROM dane";
-      $result = mysqli_query($pol,$sqlsprawdzanie);
+      $sqlsprawdzanie = mysqli_query($pol,"SELECT login from dane");
+    
       
     $przycisk = $_POST['Przycisk'];
     $login = $_POST['login'];
     $haslo = $_POST['password'];
     $haslo2 = $_POST['password2'];
-    /*if($result->num_rows>1) {
-        while ($wiersz = $result->fetch_assoc()) {
-            if(isset($przycisk) && ($login != "") && ($haslo != "") && ($haslo2 != "") && ($haslo == $haslo2) && ($login != $wiersz['login'])){
-                    $zhashowanehaslo = password_hash($haslo, PASSWORD_DEFAULT);
-                    $dodawanie = mysqli_query($pol, "insert into dane (login, haslo, haslo2) values ('$login', '$zhashowanehaslo', '$haslo2')");
-                    header("Location: logowanie.php ");
-                }elseif($result->num_rows>1) {
-                    while ($wiersz = $result->fetch_assoc()) {
-                        if($wiersz['login'] == $login){
-                            echo "Taki login już istnieje";
-                        }
+        if(isset($przycisk)){
+            if(!empty($login) && !empty($haslo) && !empty($haslo2)){
+            if($haslo == $haslo2){
+                
+                while($row = mysqli_fetch_array($sqlsprawdzanie)){
+                    if($row['login'] == $login){
+                        echo "Login jest już zajęty";
+                        break;
                     }
                 }
-            }
-        }   
-                        
-        else{
-            echo "Proszę się zarejstrować!" . "<br>";
-        }
-        */
-        if(!empty($login)){
-            if(!empty($haslo)){
-                if(!empty($haslo2)){
-                    if($haslo == $haslo2){
-                        if(mysqli_num_rows($result)>0){
-                            while($wiersz = mysqli_fetch_assoc($result)){
-                                if($wiersz['login'] == $login){
-                                    echo "Taki login już istnieje";
-                                }
-                            }
-                        }else{
-                            $zhashowanehaslo = password_hash($haslo, PASSWORD_DEFAULT);
-                            $dodawanie = mysqli_query($pol, "INSERT INTO dane (login, haslo, haslo2) values ('$login', '$zhashowanehaslo', '$haslo2')");
-                            header("Location: logowanie.php ");
-                        }
-                    }else{
-                        echo "Hasła nie są takie same";
-                    }
-                }else{
-                    echo "Proszę wpisać hasło";
+                
+                if($row['login'] != $login){
+                    $sql = mysqli_query($pol, "INSERT INTO dane (login, haslo, haslo2) VALUES ('$login', '$haslo', '$haslo2')");
+                    $_SESSION['wiadomosc'] =true;
+                    header("Location: logowanie.php");
+                    exit();
                 }
-            }else{
-                echo "Proszę wpisać hasło";
+            }
+            else{
+                echo "Hasła nie są takie same";
+            }
+            }
+            else{
+            echo "Wypełnij wszystkie pola";
             }
         }
-       
-
-
-
 
 ?>
     

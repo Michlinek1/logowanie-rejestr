@@ -22,18 +22,22 @@ $ok=True;
     </nav>
 <form method="POST">
 <div class="form-group">
-<input type="text" name="nick" class="form-control" placeholder="Nazwa użytkownika">
+<input type="text" name="nick" class="form-control" placeholder="Nazwa użytkownika" autocomplete="off">
 </div>
 <br>
 <br>
 <div class="form-group">
-<input type="text" name="haslo" class="form-control" placeholder="Hasło"> 
+<input type="password" name="haslo" class="form-control" placeholder="Hasło"> 
 </div>
 <br>
 <br>  
 <input type="submit" value="Zaloguj się" id="przycisk">
 </form>
 <?php
+if($_SESSION['wiadomosc'] == true){
+    echo "Zarejestrowałeś się pomyślnie!"."<br>";
+    unset($_SESSION['wiadomosc']);
+}
 $nick = $_SESSION["nick"];
 $_SESSION["nick"]=$_POST["nick"];
 $_SESSION["haslo"]=$_POST["haslo"];
@@ -42,8 +46,12 @@ $result=mysqli_query($pol, "SELECT * FROM dane WHERE login = '$_SESSION[nick]'")
 if ($result->num_rows>0) {
     while ($wiersz = $result->fetch_assoc()) {
         if($_SESSION["nick"]==$wiersz["login"] && $_SESSION["haslo"]==$wiersz["haslo2"]){
-            $_SESSION["zalogowany"]=True;
+            $_SESSION["zalogowany"]= true;
+            echo "Zalogowano pomyślnie!";
             header("location:index.php");
+            exit();
+
+
         }
     }
 }

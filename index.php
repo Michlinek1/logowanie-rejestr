@@ -20,6 +20,15 @@
     </nav>
 <?php
 session_start();
+//error_reporting(0);
+setcookie($_SESSION['nick'] , $_SESSION['haslo'], time() + (86400 * 30), "/");
+if(isset($_SESSION['nick']) && isset($_SESSION['haslo'])){
+    echo "Zalogowałeś się pomyślnie!". $_SESSION["nick"]. "<br>";
+   echo"<a href='wyloguj.php'>Wyloguj się</a>". "<br>";
+   echo "<a href='ustawienia.php'>Ustawienia konta</a>". "<br>" ;  
+}else{
+    echo "Nie zalogowałeś się!";
+}
 ?>
 </body>
 </html> 

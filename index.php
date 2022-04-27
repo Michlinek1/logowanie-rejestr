@@ -1,3 +1,6 @@
+<?php
+session_start()
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,30 +8,34 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Strona Główna</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.php" media="screen">
 </head>
 <body>
     <nav>
     <ul>
-       <a class ="pod" href="index.php" ><li>Strona glowna</li></a>
-       <a class ="pod" href="logowanie.php" ><li>Logowanie</li></a>
-       <a class ="pod" href="rejestracja.php" ><li>Rejestracja</li></a>
-    </ul>
-    </nav>
-<?php
-session_start();
-//error_reporting(0);
-setcookie($_SESSION['nick'] , $_SESSION['haslo'], time() + (86400 * 30), "/");
-if(isset($_SESSION['nick']) && isset($_SESSION['haslo'])){
-    echo "Zalogowałeś się pomyślnie!". $_SESSION["nick"]. "<br>";
-   echo"<a href='wyloguj.php'>Wyloguj się</a>". "<br>";
-   echo "<a href='ustawienia.php'>Ustawienia konta</a>". "<br>" ;  
-}else{
-    echo "Nie zalogowałeś się!";
+       <li><a class ="active" href="index.php" >Strona glowna</a></li>
+    <?php
+ if($_SESSION['zalogowany']){
+    echo "<li><a class = 'pod' href = 'ustawienia.php'>Ustawienia</li></div>";
+    echo "<li><a class = 'pod' href='wyloguj.php'>Wyloguj</a></li>";
+    echo "</ul>";
+    echo " </nav>";
+    echo '<h1 class = "tekst" ">Zalogowany jako: '.$_SESSION['nick'].'</h1>';
+            
 }
+else{
+    echo "<li><a class ='pod' href='logowanie.php' >Logowanie</a></li>";
+    echo "<li><a class ='pod' href='rejestracja.php' >Rejestracja</a></li>";
+    echo "</ul>";
+    echo " </nav>";
+    echo '<h1 class = "tekst">Nie jesteś zalogowany!'."</h1>'";
+    echo '<h1 class = "tekst">Zaloguj albo zarejestruj się aby korzystać z serwisu!'."</h1>";
+
+}
+
+
 ?>
+    
 </body>
 </html> 

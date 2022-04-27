@@ -1,0 +1,77 @@
+ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+li{
+    float: left;
+}
+li a{
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li a:hover {
+    background-color: #111;
+  }
+.active {
+    background-color: royalblue;
+ }
+.ustawienia{
+    float: right;
+    margin-right: 10px;
+}
+
+
+
+/* Strona 2 */
+input{
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding: 10px;
+    width: 50%;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    text-align: center;
+    
+}
+
+#Przycisk{
+    background-color: royalblue;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+
+
+}
+table, th, td{
+    /* nice looking table */
+    border-collapse: collapse;
+    border: 1px solid black;
+    text-align: center;
+    padding: 10px;
+    margin: 10px;
+    width: 50%;
+    margin-right: auto;
+    margin-left: auto;
+    
+}

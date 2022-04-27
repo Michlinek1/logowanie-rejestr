@@ -1,3 +1,7 @@
+<?php
+error_reporting(0);
+session_start()
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,20 +10,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logowanie</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.php" media="screen">
 </head>
 <body id="Rejestracja">
-<?php
-session_start();
-error_reporting(1);
-$ok=True;
-?>
 <nav>
     <ul>
-       <a class ="pod" href="index.php" ><li>Strona glowna</li></a>
-       <a class ="pod" href="logowanie.php" ><li>Logowanie</li></a>
-       <a class ="pod" href="rejestracja.php" ><li>Rejestracja</li></a>
-    </ul>
-    </nav>
+       <li><a class ="pod" href="index.php" >Strona glowna</a></li>
+       <li><a class ="active" href="logowanie.php" >Logowanie</a></li>
+       <li><a class ="pod" href="rejestracja.php" >Rejestracja</a></li>
+<?php
+if($_SESSION['zalogowany']==true){
+    echo "<li><a class = 'pod' href = 'ustawienia.php'>Ustawienia</li>";
+    echo "<li><a class = 'pod' href='wyloguj.php'>Wyloguj</a></li>";
+    echo "</ul>";
+    echo " </nav>";
+}
+else{   
+    echo "</ul>";
+    echo " </nav>";
+}
+
+
+?>
 <form method="POST">
 <div class="form-group">
 <input type="text" name="nick" class="form-control" placeholder="Nazwa użytkownika" autocomplete="off">
@@ -31,33 +43,35 @@ $ok=True;
 </div>
 <br>
 <br>  
-<input type="submit" value="Zaloguj się" id="przycisk">
+<button type="submit" id="Przycisk" name="Przycisk">Zaloguj się</button>
 </form>
 <?php
 if($_SESSION['wiadomosc'] == true){
-    echo "Zarejestrowałeś się pomyślnie!"."<br>";
+    echo "<h2 class='tekst'>Zarejestrowałeś się pomyślnie </h1>";
     unset($_SESSION['wiadomosc']);
 }
-$nick = $_SESSION["nick"];
-$_SESSION["nick"]=$_POST["nick"];
-$_SESSION["haslo"]=$_POST["haslo"];
+$_SESSION['nick'] = $_POST['nick'];
+$_SESSION['haslo'] = $_POST['haslo'];
+
 $pol = new mysqli("localhost", "root", "", "baza");
-$result=mysqli_query($pol, "SELECT * FROM dane WHERE login = '$_SESSION[nick]'");
+$result=mysqli_query($pol, "SELECT * FROM dane WHERE login = '$_POST[nick]'");
 if ($result->num_rows>0) {
     while ($wiersz = $result->fetch_assoc()) {
         if($_SESSION["nick"]==$wiersz["login"] && $_SESSION["haslo"]==$wiersz["haslo2"]){
-            $_SESSION["zalogowany"]= true;
-            echo "Zalogowano pomyślnie!";
+            $_SESSION["zalogowany"] = true;
             header("location:index.php");
             exit();
 
 
         }
+        
+        }
     }
-}
+
 else {
-    echo "Wpisz poprawne dane!";
+    echo "<h2 class = 'tekst'>Wpisz poprawne dane! </h2>";
 }
+
 
 
 

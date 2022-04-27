@@ -64,7 +64,6 @@ input{
 
 }
 table, th, td{
-    /* nice looking table */
     border-collapse: collapse;
     border: 1px solid black;
     text-align: center;

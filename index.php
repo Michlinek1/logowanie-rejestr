@@ -1,5 +1,7 @@
 <?php
-session_start()
+session_start();
+error_reporting(0);
+//require 'usuwanie.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">

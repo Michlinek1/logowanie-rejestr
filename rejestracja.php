@@ -1,6 +1,7 @@
 <?php
-error_reporting(0);
+error_reporting(1);
 session_start();
+
 
 ?>
 <!DOCTYPE html>
@@ -57,6 +58,8 @@ else{
         login VARCHAR(20)  NOT NULL,
         haslo VARCHAR(20)  NOT NULL,
         haslo2 VARCHAR(20)  NOT NULL,
+        datazalozenia VARCHAR(20)  NOT NULL,
+        img blob NOT NULL,
         PRIMARY KEY (ID)
       )");
       $sqlsprawdzanie = mysqli_query($pol,"SELECT login from dane");
@@ -66,14 +69,13 @@ else{
     $login = $_POST['login'];
     $haslo = $_POST['password'];
     $haslo2 = $_POST['password2'];
+    $zdjecie = "LOAD_FILE('C:/sql/settings.png'))";
+    $_SESSION['zdjecie'] = $zdjecie;
+    $date = date("Y-m-d H:i:s");
+    $_SESSION['czas'] = $date;
         if(isset($przycisk)){
             if(!empty($login) && !empty($haslo) && !empty($haslo2)){
-            if($haslo == $haslo2){
-                if($login == "admin" || $haslo = "admin"){
-                    echo "<h2 class='tekst'>Nie możesz użyć hasła lub loginu admin</h1>";
-                }
-
-                
+            if($haslo == $haslo2){  
                 while($row = mysqli_fetch_array($sqlsprawdzanie)){
                     if($row['login'] == $login){
                         echo "<h1 class='tekst'>Login jest już zajęty </h1>";
@@ -82,7 +84,7 @@ else{
                 }
                 
                 if($row['login'] != $login){
-                    $sql = mysqli_query($pol, "INSERT INTO dane (login, haslo, haslo2) VALUES ('$login', '$haslo', '$haslo2')");
+                    $sql = mysqli_query($pol, "INSERT INTO dane (login, haslo, haslo2, datazalozenia, img) VALUES ('$login', '$haslo', '$haslo2', '$date', $zdjecie");
                     $_SESSION['wiadomosc'] =true;
                     header("Location: logowanie.php");
                     exit();

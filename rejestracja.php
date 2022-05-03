@@ -19,25 +19,24 @@ session_start();
 <nav>
     <ul>
        <li><a class ="pod" href="index.php" >Strona glowna</a></li>
+       <li><a class ="pod" href="zgloszenia.php">Zgłoś Błąd</a></li>
        <li><a class ="pod" href="logowanie.php" >Logowanie</a></li>
        <li><a class ="active" href="rejestracja.php" >Rejestracja</a></li>
-    <?php
+    </ul>
+</nav>
+<?php
 
 if($_SESSION['zalogowany']==true){
-    echo "<li><a class = 'pod' href = 'ustawienia.php'>Ustawienia</li></div>";
-    echo "<li><a class = 'pod' href='wyloguj.php'>Wyloguj</a></li>";
-    echo "</ul>";
-    echo " </nav>";
-}
-else{   
-    echo "</ul>";
-    echo " </nav>";
+   header("Location: index.php");
 }
 
 ?>
     <form method="post">
         <div class="form-group">
             <input type="text" class="form-control" id="login" name="login" placeholder="Wpisz login"   autocomplete="off" > <br><br>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" id="login" name="email" placeholder="Wpisz email"   autocomplete="off" > <br><br>
         </div>
         <div class="form-group">
             <input type="password" class="form-control" id="password" name="password" placeholder="Wpisz hasło"> <br><br>
@@ -58,6 +57,7 @@ else{
         login VARCHAR(20)  NOT NULL,
         haslo VARCHAR(20)  NOT NULL,
         haslo2 VARCHAR(20)  NOT NULL,
+        email VARCHAR(40)  NOT NULL,
         datazalozenia VARCHAR(20)  NOT NULL,
         img blob NOT NULL,
         PRIMARY KEY (ID)
@@ -69,22 +69,25 @@ else{
     $login = $_POST['login'];
     $haslo = $_POST['password'];
     $haslo2 = $_POST['password2'];
+    $email = $_POST['email'];
+    $_SESSION['mail'] = $email;
     $zdjecie = "LOAD_FILE('C:/sql/settings.png'))";
     $_SESSION['zdjecie'] = $zdjecie;
     $date = date("Y-m-d H:i:s");
     $_SESSION['czas'] = $date;
         if(isset($przycisk)){
-            if(!empty($login) && !empty($haslo) && !empty($haslo2)){
+            if(!empty($login) && !empty($haslo) && !empty($haslo2) && !empty($email)){
             if($haslo == $haslo2){  
                 while($row = mysqli_fetch_array($sqlsprawdzanie)){
-                    if($row['login'] == $login){
-                        echo "<h1 class='tekst'>Login jest już zajęty </h1>";
+                    if($row['login'] == $login ){
+                        echo "<h1 class='tekst'>Login  jest już zajęty </h1>";
                         break;
                     }
+                    
                 }
-                
                 if($row['login'] != $login){
-                    $sql = mysqli_query($pol, "INSERT INTO dane (login, haslo, haslo2, datazalozenia, img) VALUES ('$login', '$haslo', '$haslo2', '$date', $zdjecie");
+                    $haslo = md5($haslo);
+                    $sql = mysqli_query($pol, "INSERT INTO dane (login, haslo, haslo2,email, datazalozenia, img) VALUES ('$login', '$haslo', '$haslo2','$email', '$date', $zdjecie");
                     $_SESSION['wiadomosc'] =true;
                     header("Location: logowanie.php");
                     exit();

@@ -1,6 +1,5 @@
 <?php
-error_reporting(0);
-session_start()
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,22 +15,11 @@ session_start()
 <nav>
     <ul>
        <li><a class ="pod" href="index.php" >Strona glowna</a></li>
+       <li><a class ="pod" href="zgloszenia.php">Zgłoś Błąd</a></li>
        <li><a class ="active" href="logowanie.php" >Logowanie</a></li>
        <li><a class ="pod" href="rejestracja.php" >Rejestracja</a></li>
-<?php
-if($_SESSION['zalogowany']==true){
-    echo "<li><a class = 'pod' href = 'ustawienia.php'>Ustawienia</li>";
-    echo "<li><a class = 'pod' href='wyloguj.php'>Wyloguj</a></li>";
-    echo "</ul>";
-    echo " </nav>";
-}
-else{   
-    echo "</ul>";
-    echo " </nav>";
-}
+</nav>
 
-
-?>
 <form method="POST">
 <div class="form-group">
 <input type="text" name="nick" class="form-control" placeholder="Nazwa użytkownika" autocomplete="off">
@@ -44,7 +32,13 @@ else{
 <br>
 <br>  
 <button type="submit" id="Przycisk" name="Przycisk">Zaloguj się</button>
-</form>
+<h2 class = "tekst">Nie masz konta? <a href = "rejestracja.php"> Kliknij tu </a></h2>
+<h2 class = "tekst">Nie pamiętasz loginu albo hasła? <a href = "?Zapomnialem" name = "Zapomnialem"> Kliknij tu </a></h2>    
+
+<?php
+$randomhaslo = substr(md5(rand()), 0, 7);
+require_once "wysylaniemaila.php";
+?>
 <?php
 if($_SESSION['wiadomosc'] == true){
     echo "<h2 class='tekst'>Zarejestrowałeś się pomyślnie </h1>";
@@ -63,14 +57,14 @@ if ($result->num_rows>0) {
             exit();
 
 
+        }else{
+            echo "<h2 class='tekst'>Niepoprawny login lub hasło</h2>";
         }
+    
         
         }
     }
 
-else {
-    echo "<h2 class = 'tekst'>Wpisz poprawne dane! </h2>";
-}
 
 
 

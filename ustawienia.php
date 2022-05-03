@@ -12,23 +12,38 @@
 <?php
 session_start();
 error_reporting(1);
+if($_SESSION['zalogowany'] == false){
+    header("Location: index.php");
+}
+
 
 ?>
   <nav>
     <ul>
        <li><a class ="pod" href="index.php" >Strona glowna</a></li>
+         <li ><a class = "pod" href = "zgloszenia.php">Zgłoś Błąd</a></li>
        <li><a class ="active" href="#" >Ustawienia</a></li>
+        <li><a class ="pod" href="wyloguj.php">Wyloguj</a></li>
     </ul>
   </nav>
   <table>
       <tr>
           <th >Twój Login </th>
           <th>Twoje hasło </th> 
+          <th>Twoje email </th>
           <th>Twoje zdjęcie </th>
       </tr>
       <tr>
             <td><?php echo $_SESSION['nick']; ?></td>
             <td><?php echo $_SESSION['haslo']; ?></td>
+            <td>
+            <?php 
+            #print the email from database 
+            $pol = new mysqli("localhost", "root", "", "baza");
+            $result=mysqli_query($pol, "SELECT email FROM dane WHERE login = '".$_SESSION['nick']."'");
+            $row = mysqli_fetch_array($result);
+            echo $row['email'];
+            ?>
             <td>
                 <?php
                 function zdjecie(){

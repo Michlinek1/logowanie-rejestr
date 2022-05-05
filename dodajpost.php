@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+$pol = new mysqli("localhost", "root", "", "baza");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +25,6 @@ session_start();
     <form method = "POST">
         <input type = "text" name = "Tytul" placeholder = "Tytuł" required>
         <textarea  id = "TextArea" name ="textarea" cols="30" rows="10" placeholder="Tekst" required></textarea>
-        <input type = "date" name = "Data" placeholder = "Data" required>
         <input type = "text" name = "Kategoria" placeholder = "Kategoria" required>
         <button class = "button" id = "Przycisk" type="submit" name="Post">+ Dodaj post</button>
     </form>
@@ -53,26 +52,18 @@ session_start();
         <?php
         error_reporting(0);
         $przyciskpost = $_POST['Post'];
+        $czas = date("Y-m-d H:i:s");
         if(isset($przyciskpost)){
             $Tytul = $_POST['Tytul'];
             $textarea = $_POST['textarea'];
             $Autor = $_SESSION['nick'];
             $Data = $_POST['Data'];
             $Kategoria = $_POST['Kategoria'];
-            $pol = new mysqli("localhost", "root", "", "baza");
-            $sql  = mysqli_query($pol, "create table if not exists posty (
-                ID int NOT NULL  AUTO_INCREMENT,
-                tytul VARCHAR(20)  NOT NULL,
-                tekst VARCHAR(400)  NOT NULL,
-                autor VARCHAR(40)  NOT NULL,
-                data date  NOT NULL,
-                kategoria VARCHAR(20)  NOT NULL,
-                PRIMARY KEY (ID)
-              )");
-            $pol->query("INSERT INTO posty (tytul, tekst, autor, data, kategoria) VALUES ('$Tytul', '$textarea', '$Autor', '$Data', '$Kategoria')");
+            $pol->query("INSERT INTO posty (tytul, tekst, autor, data, kategoria) VALUES ('$Tytul', '$textarea', '$Autor', '$czas', '$Kategoria')");
             header('Location: index.php');
+            $_SESSION['dodano'] = true;
+            exit();
         }
-
 
 
 

@@ -31,21 +31,39 @@ session_start( );
     <?php
     $pol = new mysqli("localhost", "root", "", "baza");
     $zapytanie = $pol->query("SELECT * FROM posty WHERE ID = '$_GET[id]'");
+    $zapytanie1 = $pol -> query("SELECT ID FROM posty");
     while($wiersz = $zapytanie->fetch_assoc()){
-        echo $wiersz['ID'];
         echo '<div class = "column">';
         echo '<div class = "box">';
         echo '<h2 style = "text-align:center">'."Autor:". " " .$wiersz['tytul'].'</h2>';
         echo '<p  style = "text-align:center">'. "Kategoria:"." ".$wiersz['kategoria'].'</p>';
         echo '<p style = "text-align:center">'."Data:". " " .$wiersz['data'].'</p>';
         echo '<p style = "text-align:center">'. "Autor:". " ".$wiersz['autor'].'</p>';
-        echo "<p style = 'text-align:center'>Treść</p>";
         echo '</div>';
         echo '</div>';
         echo '<textarea  readonly style = "text-align:center">'.$wiersz['tekst'].'</textarea>';
+        if(mysqli_num_rows($zapytanie1) == $_GET['id'] ){
+           ;
+        }else{
+            echo '<button class = "button"id = "Przycisk" onclick="window.location.href=\'zobaczpost.php?id='.(intval($wiersz['ID'] + 1)).'\'">Zobacz następny post</button>';
+        }
+        if($wiersz['ID'] >1 && mysqli_num_rows($zapytanie1) > 1){
+            echo '<button class = "button"id = "Przycisk" onclick="window.location.href=\'zobaczpost.php?id='.(intval($wiersz['ID'] - 1)).'\'">Zobacz poprzedni post</button>';
+        }
+        if($_SESSION['nick'] == $wiersz['autor']){
+            echo "<form method = 'POST'>";
+            echo '<button class = "button" name = "PrzyciskUsun"id = "Przycisk" style = "background-color:red">Usuń post</button>';
+            echo "</form>";
+            if(isset($_POST['PrzyciskUsun'])){
+                $pol->query("DELETE FROM posty WHERE ID = '$_GET[id]'");
+                $pol ->query("ALTER TABLE posty AUTO_INCREMENT = 1;");
+                $_SESSION['usunieto'] = true;
+                header("Location: index.php");
+                exit();
+            }
+          
+        }
     }
-
-
 
 ?>
     <style>

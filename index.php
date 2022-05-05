@@ -26,13 +26,32 @@ error_reporting(E_STRICT);
 
     <?php
  if($_SESSION['zalogowany']){
+    $pol = new mysqli("localhost", "root", "", "baza");
+    $sql = mysqli_query($pol, "SELECT * from posty");
+    
     echo "<li><a class = 'pod' href = 'ustawienia.php'>Ustawienia</li></div>";
     echo "<li><a class = 'pod' href='wyloguj.php'>Wyloguj</a></li>";
     echo "</ul>";
     echo " </nav>";
+    if($_SESSION['dodano'] == true){
+        echo "<h2 class='tekst'>Dodałeś post!</h1>";
+        unset($_SESSION['dodano']);
+    }
+    if($_SESSION['usunieto'] == true){
+        echo "<h2 class='tekst'>Usunąłeś post!</h1>";
+        unset($_SESSION['usunieto']);
+    }
+    if($_SESSION['edycja'] == true){
+        echo "<h2 class='tekst'>Edytowałeś post!</h1>";
+        unset($_SESSION['edycja']);
+    }
     echo '<h1 class = "tekst">Zalogowany jako: '.$_SESSION['nick'].'</h1>';
     echo '<form action = "" method = "POST">';
     echo '<button id = "Przycisk" type =  "submit" name = "dodajpost"> + Dodaj post</button>';
+    if(mysqli_num_rows($sql) > 0){
+        echo "<button id = 'Przycisk' type = 'submit' name = 'Przyciskzobacz'>Zobacz Posty!</button>";
+    }
+    
     echo '</form>';
 
     if(isset($_POST['dodajpost'])){
@@ -41,34 +60,20 @@ error_reporting(E_STRICT);
 
 
 
-    foreach($_SESSION['kategorie'] as $kategoria){
-        
 
-}
+    
 
-    $pol = new mysqli("localhost", "root", "", "baza");
-    $zapytanie = $pol->query("SELECT * FROM posty"); 
-    while($wiersz = $zapytanie->fetch_assoc()){
-        echo '<div class = "column">';
-        echo '<div class = "box">';
-        echo '<h2 style = "text-align:center">'.$wiersz['tytul'].'</h2>';
-        echo '<p  style = "text-align:center">'. "Kategoria:"." ".$wiersz['kategoria'].'</p>';
-        echo '<p style = "text-align:center">'.$wiersz['data'].'</p>';
-        echo '<p style = "text-align:center">'. "Autor:". " ".$wiersz['autor'].'</p>';
-        echo '<form action = "" method = "POST">';
-        echo "<button class = 'button' id = 'Przycisk' type='submit' name='Przyciskzobacz'> Zobacz Post</button>";
-        echo $wiersz['ID'];
+
+
         if(isset($_POST['Przyciskzobacz'])){
-            $_SESSION['id'] = $wiersz['ID'];
-            header('Location: zobaczpost.php?id='.$_SESSION['id']);
+            $sql = mysqli_query($pol, "SELECT id from posty");
+            header('Location: zobaczpost.php?id='.mysqli_fetch_assoc($sql)['id']);
             
         }
-        echo "</form>";
-        echo '</div>';
-        echo '</div>';
+      
   
     }
-}
+
 
 
 else{
